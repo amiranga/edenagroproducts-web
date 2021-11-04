@@ -18,11 +18,12 @@
     <link rel="stylesheet" href="css/style.css" />
     <!-- Responsive-->
     <link rel="stylesheet" href="css/responsive.css" />
-    <!-- fevicon -->
-    <link rel="icon" href="images/fevicon.png" type="image/gif" />
+    <!-- favicon -->
+    <link rel="icon" href="images/favicon.png" type="image/gif" />
     <!-- Scrollbar Custom CSS -->
     <link rel="stylesheet" href="css/jquery.mCustomScrollbar.min.css" />
     <!-- Tweaks for older IEs-->
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
@@ -102,10 +103,12 @@
         id="myCarousel"
         class="carousel slide banner-main"
         data-ride="carousel"
+        data-interval="4000"
+        data-pause="false"
       >
         <ul class="carousel-indicators">
-          <li data-target="#myCarousel" data-slide-to="0" class=""></li>
-          <li data-target="#myCarousel" data-slide-to="1" class="active"></li>
+          <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+          <li data-target="#myCarousel" data-slide-to="1" class=""></li>
           <li data-target="#myCarousel" data-slide-to="2" class=""></li>
         </ul>
         <div class="carousel-inner">
@@ -216,7 +219,9 @@
           </div>
           <div class="col-xl-5 col-lg-5 col-md-5 co-sm-l2">
             <div class="about_img">
-              <figure><img src="images/about.png" alt="img" /></figure>
+              <figure>
+                <img data-aos="slide-up" src="images/about.png" alt="img" />
+              </figure>
             </div>
           </div>
         </div>
@@ -230,21 +235,21 @@
           <div class="col-xl-4 col-lg-4 col-md-4 co-sm-l2">
             <div class="for_box">
               <i><img src="images/3.png" alt="#" /></i>
-              <span>12</span>
+              <span class="count" data-stop="12">12</span>
               <h3>Different Products</h3>
             </div>
           </div>
           <div class="col-xl-4 col-lg-4 col-md-4 co-sm-l2">
             <div class="for_box">
               <i><img src="images/1.png" alt="#" /></i>
-              <span>10</span>
+              <span class="count" data-stop="10">10</span>
               <h3>Farms</h3>
             </div>
           </div>
           <div class="col-xl-4 col-lg-4 col-md-4 co-sm-l2">
             <div class="for_box">
               <i><img src="images/4.png" alt="#" /></i>
-              <span>8</span>
+              <span class="count" data-stop="8">8</span>
               <h3>Experienced Team</h3>
             </div>
           </div>
@@ -269,14 +274,18 @@
             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12">
               <div class="offer_box">
                 <h3>Fresh Vegatables</h3>
-                <figure><img src="images/offer1.png" alt="img" /></figure>
+                <figure>
+                  <img src="images/offer1.png" alt="img" data-aos="fade-out" />
+                </figure>
                 <p>100% Fresh and Organic vegetables collected from farmers.</p>
               </div>
             </div>
             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 margin_ttt">
               <div class="offer_box">
                 <h3>Dehydrate</h3>
-                <figure><img src="images/offer2.png" alt="img" /></figure>
+                <figure>
+                  <img src="images/offer2.png" alt="img" data-aos="fade-out" />
+                </figure>
                 <p>
                   Vegetables and fruits are dehydrated hygienically to preserve
                   nutrition and to preserve.
@@ -286,7 +295,9 @@
             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 margin-lkk">
               <div class="offer_box">
                 <h3>Packaging</h3>
-                <figure><img src="images/offer3.png" alt="img" /></figure>
+                <figure>
+                  <img src="images/offer3.png" alt="img" data-aos="fade-out" />
+                </figure>
                 <p>
                   Packaging is done hygienically and stored in our warehouse.
                 </p>
@@ -546,7 +557,7 @@
 
     <!-- footer -->
     <!--  footer -->
-    <footr>
+    <footer>
       <div class="footer top_layer">
         <div class="container">
           <div class="row">
@@ -597,7 +608,7 @@
           </p>
         </div>
       </div>
-    </footr>
+    </footer>
 
     <!-- end footer -->
     <!-- Javascript files-->
@@ -610,24 +621,37 @@
     <script src="js/jquery.mCustomScrollbar.concat.min.js"></script>
     <script src="js/custom.js"></script>
     <!-- javascript -->
-    <script src="js/owl.carousel.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
     <script src="https:cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.js"></script>
     <script>
       $(document).ready(function () {
-        $(".fancybox").fancybox({
-          openEffect: "none",
-          closeEffect: "none",
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              var $this = $(entry.target);
+              $({ Counter: 0 }).animate(
+                { Counter: $this.attr("data-stop") },
+                {
+                  duration: 1000,
+                  easing: "swing",
+                  step: function (now) {
+                    $this.text(Math.ceil(now));
+                  },
+                }
+              );
+            }
+          });
         });
 
-        $(".zoom").hover(
-          function () {
-            $(this).addClass("transition");
-          },
-          function () {
-            $(this).removeClass("transition");
-          }
-        );
+        var counters = document.getElementsByClassName("count");
+        for (var i = 0; i < counters.length; i++) {
+          observer.observe(counters[i]);
+        }
       });
+    </script>
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+      AOS.init();
     </script>
   </body>
 </html>
